@@ -23,12 +23,12 @@ jobs:
 
       - name: AUTOMATIZACIÓN
         run: |
-          echo "¡Hola de nuevo!1" >> $GITHUB_WORKSPACE/archivo.txt
+          echo "¡Hola de nuevo!1" >> archivo.txt
 
       # Persistir archivo.txt en el sistema de archivos del runner
       - name: Persistir archivo.txt
         if: always()
-        run: mv $GITHUB_WORKSPACE/archivo.txt $RUNNER_WORKSPACE/archivo.txt
+        run: mv archivo.txt $RUNNER_WORKSPACE/archivo.txt
 
   build2:
     runs-on: ubuntu-latest
@@ -47,7 +47,7 @@ jobs:
 
       # Copiar archivo.txt desde el sistema de archivos del runner
       - name: Copiar archivo.txt
-        run: cp $RUNNER_WORKSPACE/archivo.txt $GITHUB_WORKSPACE/archivo_copiado.txt
+        run: cp $RUNNER_WORKSPACE/archivo.txt archivo_copiado.txt
 
       - name: Commit y push cambios
         uses: stefanzweifel/git-auto-commit-action@v2
