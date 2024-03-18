@@ -23,7 +23,7 @@ jobs:
         python-version: 3.7
     - name: AUTOMATIZACIÓN
       run: |
-        echo "¡Hola de nuevo!" >> archivo.txt
+        echo "¡Hola de nuevo!1" >> archivo.txt
 
 
   build2:
