@@ -23,13 +23,13 @@ jobs:
 
       - name: AUTOMATIZACIÓN
         run: |
-          echo "¡Hola de nuevo!1" >> archivo.txt
+          echo "¡Hola de nuevo!1" >> archivo4.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: shared-files
-          path: archivo.txt
+          path: archivo4.txt
 
   build2:
     runs-on: ubuntu-latest
@@ -50,11 +50,8 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: shared-files
-          path: shared
-  
-      - name: Print shared file content
-        run: cp shared/archivo.txt archivo.txt
-
+          path: shared  
+      
       - name: Commit y push cambios
         uses: stefanzweifel/git-auto-commit-action@v2
         with:
