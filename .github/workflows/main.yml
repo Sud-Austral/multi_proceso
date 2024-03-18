@@ -27,7 +27,7 @@ jobs:
 
       # Persistir archivo.txt en el sistema de archivos del runner
       - name: Persistir archivo.txt
-        if: always()
+        if: always() # Asegura que este paso se ejecute incluso si hay errores en pasos anteriores
         run: mv archivo.txt $RUNNER_WORKSPACE/archivo.txt
 
   build2:
@@ -44,6 +44,11 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
+
+      # Esperar hasta que se complete el paso de persistencia en el trabajo anterior
+      - name: Esperar persistencia de archivo.txt
+        run: |
+          while [ ! -f $RUNNER_WORKSPACE/archivo.txt ]; do sleep 1; done
 
       # Copiar archivo.txt desde el sistema de archivos del runner
       - name: Copiar archivo.txt
