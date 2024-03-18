@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
 import sys
+import time
+
+
+time.sleep(9999)
 
 # Crear un DataFrame con datos aleatorios
 data = {
