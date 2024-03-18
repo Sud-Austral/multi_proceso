@@ -25,11 +25,10 @@ jobs:
         run: |
           echo "¡Hola de nuevo!1" >> $GITHUB_WORKSPACE/archivo.txt
 
-      - name: Guardar archivo como artefacto
-        uses: actions/upload-artifact@v2
-        with:
-          name: archivo-artifact
-          path: $GITHUB_WORKSPACE/archivo.txt
+      # Persistir archivo.txt en el sistema de archivos del runner
+      - name: Persistir archivo.txt
+        if: always()
+        run: mv $GITHUB_WORKSPACE/archivo.txt $RUNNER_WORKSPACE/archivo.txt
 
   build2:
     runs-on: ubuntu-latest
@@ -46,15 +45,9 @@ jobs:
         with:
           python-version: 3.7
 
-      - name: Descargar artefactos
-        uses: actions/download-artifact@v2
-        with:
-          name: archivo-artifact
-          path: $GITHUB_WORKSPACE
-
-      - name: Copiar archivo
-        run: |
-          cp $GITHUB_WORKSPACE/archivo.txt archivo_copiado.txt
+      # Copiar archivo.txt desde el sistema de archivos del runner
+      - name: Copiar archivo.txt
+        run: cp $RUNNER_WORKSPACE/archivo.txt $GITHUB_WORKSPACE/archivo_copiado.txt
 
       - name: Commit y push cambios
         uses: stefanzweifel/git-auto-commit-action@v2
