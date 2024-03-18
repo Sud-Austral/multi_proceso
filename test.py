@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import sys
 
 # Crear un DataFrame con datos aleatorios
 data = {
@@ -10,5 +11,6 @@ data = {
 }
 
 df = pd.DataFrame(data)
+nombre = sys.argv[1]
 
-df.to_csv("job1.csv",index=False)
+df.to_csv(f"{nombre}.csv",index=False)
