@@ -30,6 +30,8 @@ jobs:
     needs: common
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v2
       - name: Ejecutar pruebas para job1
         run: python test.py job4
 
@@ -43,6 +45,8 @@ jobs:
     needs: common
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v2
       - name: Ejecutar pruebas para job2
         run: python test.py job5
 
@@ -56,6 +60,8 @@ jobs:
     needs: common
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v2
       - name: Ejecutar pruebas para job3
         run: python test.py job6
 
