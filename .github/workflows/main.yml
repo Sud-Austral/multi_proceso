@@ -1,36 +1,66 @@
-name: Share Files Between Jobs
+name: Descarga
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  schedule:
+    - cron: '0 0 * * 6' # A las 00:00 del sábado
 
 jobs:
-  job1:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7]
     steps:
-      - name: Checkout code
+      - name: Checkout del repositorio
         uses: actions/checkout@v2
 
-      - name: Create file
-        run: echo "Hello from Job 1" > shared_file.txt
+      - name: Configurar Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      - name: AUTOMATIZACIÓN
+        run: |
+          echo "¡Hola de nuevo!1" >> archivo.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: shared-files
-          path: shared_file.txt
+          path: archivo.txt
 
-  job2:
+  build2:
     runs-on: ubuntu-latest
-    needs: job1
+    needs: build
+    strategy:
+      matrix:
+        python-version: [3.7]
     steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v2
+
+      - name: Configurar Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
           name: shared-files
           path: shared
-
+  
       - name: Print shared file content
-        run: cat shared/shared_file.txt
+        run: cp shared/archivo.txt archivo.txt
 
+      - name: Commit y push cambios
+        uses: stefanzweifel/git-auto-commit-action@v2
+        with:
+          commit_message: "Actualizacion"
+          branch: main
+          commit_user_name: Actions Bot
+          commit_user_email: lmonsalve22@gmail.com
+          commit_author: DataIntelligence BOT <lmonsalve22@gmail.com>
+          push_options: '--force'
