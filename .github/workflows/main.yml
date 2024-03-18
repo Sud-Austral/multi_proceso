@@ -1,65 +1,36 @@
-name: Descarga
+name: Share Files Between Jobs
 
 on:
   push:
-    branches: [main]
-  schedule:
-    - cron: '0 0 * * 6' # A las 00:00 del sábado
+    branches:
+      - main
 
 jobs:
-  build:
+  job1:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.7]
     steps:
-      - name: Checkout del repositorio
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Configurar Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+      - name: Create file
+        run: echo "Hello from Job 1" > shared_file.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
         with:
-          python-version: 3.7
+          name: shared-files
+          path: shared_file.txt
 
-      - name: AUTOMATIZACIÓN
-        run: |
-          echo "¡Hola de nuevo!1" >> archivo.txt
-
-      # Persistir archivo.txt en el sistema de archivos del runner
-      - name: Persistir archivo.txt
-        if: always() # Asegura que este paso se ejecute incluso si hay errores en pasos anteriores
-        run: mv archivo.txt $RUNNER_WORKSPACE/archivo.txt
-
-  build2:
+  job2:
     runs-on: ubuntu-latest
-    needs: build
-    strategy:
-      matrix:
-        python-version: [3.7]
+    needs: job1
     steps:
-      - name: Checkout del repositorio
-        uses: actions/checkout@v2
-
-      - name: Configurar Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+      - name: Download artifact
+        uses: actions/download-artifact@v2
         with:
-          python-version: 3.7
+          name: shared-files
+          path: shared
 
-      # Esperar hasta que se complete el paso de persistencia en el trabajo anterior
-      - name: Esperar persistencia de archivo.txt
-        run: |
-          while [ ! -f $RUNNER_WORKSPACE/archivo.txt ]; do sleep 1; done
+      - name: Print shared file content
+        run: cat shared/shared_file.txt
 
-      # Copiar archivo.txt desde el sistema de archivos del runner
-      - name: Copiar archivo.txt
-        run: cp $RUNNER_WORKSPACE/archivo.txt archivo_copiado.txt
-
-      - name: Commit y push cambios
-        uses: stefanzweifel/git-auto-commit-action@v2
-        with:
-          commit_message: "Actualizacion"
-          branch: main
-          commit_user_name: Actions Bot
-          commit_user_email: lmonsalve22@gmail.com
-          commit_author: DataIntelligence BOT <lmonsalve22@gmail.com>
-          push_options: '--force'
