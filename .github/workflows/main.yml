@@ -1,13 +1,11 @@
 name: Descarga
+
 # Controls when the workflow will run
 on:
-
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [main]
   schedule:
-    - cron:  '0 0 * * 6'
-  #  At 00:00 on Saturday
+    - cron: '0 0 * * 6' # At 00:00 on Saturday
 
 jobs:
   build:
@@ -16,15 +14,23 @@ jobs:
       matrix:
         python-version: [3.7]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.7
-    - name: AUTOMATIZACIÓN
-      run: |
-        echo "¡Hola de nuevo!1 " >> $GITHUB_WORKSPACE/archivo.txt
+      - name: Checkout del repositorio
+        uses: actions/checkout@v2
 
+      - name: Configurar Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      - name: AUTOMATIZACIÓN
+        run: |
+          echo "¡Hola de nuevo!1" >> $GITHUB_WORKSPACE/archivo.txt
+
+      - name: Guardar archivo como artefacto
+        uses: actions/upload-artifact@v2
+        with:
+          name: archivo-artifact
+          path: $GITHUB_WORKSPACE/archivo.txt
 
   build2:
     runs-on: ubuntu-latest
@@ -33,28 +39,29 @@ jobs:
       matrix:
         python-version: [3.7]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.7
-    - name: AUTOMATIZACIÓN
-      run: |
-        echo "¡Hola de nuevo!3" >> archivo3.txt
-        cp $GITHUB_WORKSPACE/archivo.txt archivo.txt
+      - name: Checkout del repositorio
+        uses: actions/checkout@v2
 
+      - name: Configurar Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
 
-    - uses: stefanzweifel/git-auto-commit-action@v2
-      with:
-        commit_message: "Actualizacion"
-        branch: main
-        # Optional glob pattern of files which should be added to the commit
-        #file_pattern: /
-        # Optional local file path to the repository
-        repository: .
+      - name: AUTOMATIZACIÓN
+        run: |
+          echo "¡Hola de nuevo!3" >> archivo3.txt
+          cp $GITHUB_WORKSPACE/archivo.txt archivo.txt
 
-        # Optional commit user and author settings
-        commit_user_name: Actions Bot
-        commit_user_email: lmonsalve22@gmail.com
-        commit_author: DataIntelligence BOT <lmonsalve22@gmail.com>
-        push_options: '--force'
+      - name: Copiar archivo
+        run: |
+          cp archivo.txt archivo_copiado.txt
+
+      - name: Commit y push cambios
+        uses: stefanzweifel/git-auto-commit-action@v2
+        with:
+          commit_message: "Actualizacion"
+          branch: main
+          commit_user_name: Actions Bot
+          commit_user_email: lmonsalve22@gmail.com
+          commit_author: DataIntelligence BOT <lmonsalve22@gmail.com>
+          push_options: '--force'
